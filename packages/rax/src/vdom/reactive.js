@@ -13,10 +13,10 @@ export default class ReactiveComponent extends Component {
     super();
     // A pure function
     this.__render = pureRender;
-    this._hookID = 0;
+    this.__hookID = 0;
     // Number of rerenders
     this.__reRenders = 0;
-    this._hooks = {};
+    this.__hooks = {};
     // Handles store
     this.__didMount = [];
     this.__didUpdate = [];
@@ -52,11 +52,11 @@ export default class ReactiveComponent extends Component {
   }
 
   __getHooks() {
-    return this._hooks;
+    return this.__hooks;
   }
 
   __getHookID() {
-    return ++this._hookID;
+    return ++this.__hookID;
   }
 
   readContext(context) {
@@ -88,7 +88,7 @@ export default class ReactiveComponent extends Component {
   }
 
   componentWillMount() {
-    this.shouldUpdate = true;
+    this.__shouldUpdate = true;
   }
 
   componentDidMount() {
@@ -96,7 +96,7 @@ export default class ReactiveComponent extends Component {
   }
 
   componentWillReceiveProps() {
-    this.shouldUpdate = true;
+    this.__shouldUpdate = true;
   }
 
   componentDidUpdate() {
@@ -117,7 +117,7 @@ export default class ReactiveComponent extends Component {
       Host.measurer && Host.measurer.beforeRender();
     }
 
-    this._hookID = 0;
+    this.__hookID = 0;
     this.__reRenders = 0;
     this.__isScheduled = false;
     let children = this.__render(this.props, this.forwardRef ? this.forwardRef : this.context);
@@ -132,12 +132,12 @@ export default class ReactiveComponent extends Component {
         }
       }
 
-      this._hookID = 0;
+      this.__hookID = 0;
       this.__isScheduled = false;
       children = this.__render(this.props, this.forwardRef ? this.forwardRef : this.context);
     }
 
-    if (this.shouldUpdate) {
+    if (this.__shouldUpdate) {
       this.__children = children;
       this.__shouldUpdate = false;
     }
